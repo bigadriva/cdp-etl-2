@@ -11,4 +11,4 @@ class Sale(BaseModel):
     product_id: str
     salesperson_id: str
     client_cnpj: str
-    company_cnpj: str
+    company_name: str
