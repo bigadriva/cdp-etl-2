@@ -1,0 +1,138 @@
+openapi: 3.0.0
+
+info:
+  version: 1.0.0
+  title: CDP ETL
+  description: API para o processo de ETL do CDP
+
+servers:
+  - url: http://localhost:5000
+
+paths:
+  /connectors/{company_name}:
+    get:
+      description: Retorna o conector para a empresa passada
+      parameters:
+        - name: company_name
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Conector encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Connector'
+
+        '404':
+          description: Conector não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+
+    post:
+      description: Cria o conector para a empresa passada
+      parameters:
+        - name: company_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Connector'
+      responses:
+        '201':
+          description: Conector criado com sucesso
+
+components:
+  schemas:
+    Connector:
+      type: object
+      required:
+        - "company_name"
+        - "host"
+        - "port"
+        - directory
+        - user
+        - password
+        - file_config
+        - database_mapping
+      properties:
+        company_name:
+          type: string
+          example: Driva Tecnologia
+        type:
+          type: string
+          example: ftp
+        host:
+          type: string
+          example: 192.168.10.14
+        port:
+          type: integer
+          example: 22
+        directory:
+          type: string
+          example: /
+        user:
+          type: string
+          example: Driva
+        password:
+          type: string
+          example: "#driva123"
+        file_config:
+          type: string
+          example:
+            type: csv
+            encoding: utf-8
+            separator: ","
+        database_mapping:
+          type: object
+          example:
+            products_mapping:
+              id: "produto_id"
+              type: "tipo"
+              description: "desc_produto"
+            sales_mapping:
+              id: "id"
+              date: "data"
+              amount: "quantidade"
+              value: valor_total
+              product_id: "produto_id"
+              salesperson_id: "vendedor_id"
+              client_cnpj: "cnpj"
+            salespeople_mapping:
+              id: "vendedor_id"
+              manager_id: "gerente_id"
+
+    FileConfig:
+      type: object
+      required:
+        - type
+        - encoding
+      properties:
+        type:
+          type: string
+          example: csv
+        encoding:
+          type: string
+          example: utf-8
+        separator:
+          type: string
+          example: ","
+
+  examples:
+    FileConfig:
+      value:
+        type: object
+        example:
+          type: "csv"
+          encoding: "utf-8"
+          separator: ","
