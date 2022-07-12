@@ -5,6 +5,7 @@ from ftplib import FTP, error_perm, error_reply
 from typing import List
 
 from connector.base import ConnectionException, Connector
+from database.elastic import ElasticAdapter
 
 from file_handler.file_handler_factory_creator import FileHandlerFactoryCreator
 
@@ -12,18 +13,19 @@ from models.file.file_config import FileConfig
 
 
 class FTPConnector(Connector):
-    directory: str
-    user: str
-    password: str
-
-    def __init__(self, company_name: str, host: str, port: int, file_config: FileConfig, directory: str, user: str, password: str) -> None:
+    def __init__(self, company_name: str, type: str, host: str, port: int, directory: str, user: str, password: str, file_config: FileConfig) -> None:
         self.company_name = company_name
+        self.type = type
         self.host = host
         self.port = port
         self.file_config = file_config
         self.directory = directory
         self.user = user
         self.password = password
+        self.database_adapter = ElasticAdapter()
+
+    def create(self) -> None:
+        self.database_adapter.create_connector(self)
 
     def validate_connection(self) -> bool:
         is_valid = True
@@ -77,4 +79,4 @@ class FTPConnector(Connector):
     def load_data(self) -> None:
         factory = FileHandlerFactoryCreator.create_factory(self.file_config)
         loader = factory.create_loader()
-        loader.load(self.database_mapping)
+        loader.load(self.company_name.lower().replace(' ', '_'), self.database_mapping, self.file_config)

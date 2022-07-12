@@ -6,14 +6,24 @@ from models.file.file_config import FileConfig
 
 from models.mapping.database import DatabaseMapping
 
+class Connector:
+    pass
 
 class Connector(ABC):
     company_name: str
+    type: str
     host: str
     port: int
+    directory: str
+    user: str
+    password: str
     file_config: FileConfig
     database_mapping: DatabaseMapping
     downloaded_files_paths: List[Path]
+
+    @abstractmethod
+    def create(self) -> None:
+        pass
 
     @abstractmethod
     def validate_connection(self) -> bool:
