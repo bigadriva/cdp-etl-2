@@ -82,11 +82,15 @@ def main():
     app = FastAPI()
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=['http://localhost'],
+        allow_origins=['http://localhost', '*'],
         allow_methods=['*'],
         allow_headers=['*']
     )
-    app.include_router(connector_router, tags=['connector'], prefix='/connectors')
+    app.include_router(
+        connector_router,
+        tags=['connector'],
+        prefix='/connectors'
+    )
 
     uvicorn.run(app, host='0.0.0.0', port=5000)
 

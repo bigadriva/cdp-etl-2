@@ -1,13 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from connector.base import Connector
 from models.api.connector import APIConnector
 
 from models.database.product import Product
 from models.database.sale import Sale
 from models.database.salesperson import Salesperson
-from routers.connector import delete_connector
 
 
 class DatabaseAdapter(ABC):

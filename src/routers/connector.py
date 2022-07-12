@@ -20,7 +20,7 @@ def get_connector(company_name: str) -> APIConnector:
     elastic_adapter = ElasticAdapter()
     return elastic_adapter.read_connector(company_name)
 
-@router.put('{company_name}')
+@router.put('/{company_name}')
 def update_connector(company_name: str, connector: APIConnector):
     elastic_adapter = ElasticAdapter()
     elastic_adapter.update_connector(company_name, connector)

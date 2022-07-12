@@ -48,6 +48,11 @@ class ElasticAdapter(DatabaseAdapter):
 
         if result['found']:
             response = result['_source']
+
+            database_mapping = None
+            if 'database_mapping' in response:
+                database_mapping = response['database_mapping']
+
             response = APIConnector(
                 company_name=company_name,
                 type=response['type'],
@@ -60,7 +65,8 @@ class ElasticAdapter(DatabaseAdapter):
                     type=response['file_config']['type'],
                     encoding=response['file_config']['encoding'],
                     separator=response['file_config']['separator']
-                )
+                ),
+                database_mapping=database_mapping
             )
 
         return response
