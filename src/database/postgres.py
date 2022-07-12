@@ -9,7 +9,6 @@ from models.database.sale import Sale
 from models.database.salesperson import Salesperson
 
 from psycopg2 import connect
-# from psycopg2._psycopg import _cursor
 from psycopg2.extras import execute_values
 
 class PostgresAdapter(DatabaseAdapter):

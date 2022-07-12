@@ -1,3 +1,4 @@
+import os
 from typing import List
 
 from database.base import DatabaseAdapter
@@ -15,8 +16,8 @@ from models.file.file_config import FileConfig
 class ElasticAdapter(DatabaseAdapter):
     def __init__(self) -> None:
         self.es = Elasticsearch(
-            'http://localhost:9200',
-            # basic_auth=('elastic', 'elastic')
+            os.getenv('ELASTIC_HOST'),
+            basic_auth=(os.getenv('ELASTIC_USER'), os.getenv('ELASTIC_PASSWORD'))
         )
 
     def initialize_db(self, company_name: str):

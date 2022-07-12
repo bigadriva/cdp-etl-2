@@ -1,8 +1,6 @@
 from typing import List
 from fastapi import APIRouter
 
-from connector.factory import ConnectorFactory
-
 from models.api.connector import APIConnector
 
 from database.elastic import ElasticAdapter
