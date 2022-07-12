@@ -2,10 +2,12 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from connector.base import Connector
+from models.api.connector import APIConnector
 
 from models.database.product import Product
 from models.database.sale import Sale
 from models.database.salesperson import Salesperson
+from routers.connector import delete_connector
 
 
 class DatabaseAdapter(ABC):
@@ -32,9 +34,17 @@ class DatabaseAdapter(ABC):
         pass
 
     @abstractmethod
-    def create_connector(self, connector: Connector):
+    def create_connector(self, connector: APIConnector):
         pass
 
     @abstractmethod
-    def read_connector(self, company_name: str) -> Connector:
+    def read_connector(self, company_name: str) -> APIConnector:
+        pass
+
+    @abstractmethod
+    def update_connector(self, company_name: str, connector: APIConnector) -> None:
+        pass
+
+    @abstractmethod
+    def delete_connector(self, company_name: str) -> None:
         pass

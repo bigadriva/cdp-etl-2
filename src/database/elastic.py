@@ -2,7 +2,6 @@ from typing import List
 
 from database.base import DatabaseAdapter
 
-from connector.base import Connector
 from models.api.connector import APIConnector
 
 from models.database.product import Product
@@ -37,40 +36,6 @@ class ElasticAdapter(DatabaseAdapter):
             index=f'cdp-connectors',
             id=connector.company_name,
             document=connector.dict()
-            # document={
-            #     'company_name': connector.company_name,
-            #     'type': connector.type,
-            #     'host': connector.host,
-            #     'port': connector.port,
-            #     'directory': connector.directory,
-            #     'user': connector.user,
-            #     'password': connector.password,
-            #     'file_config': {
-            #         'type': connector.file_config.type,
-            #         'encoding': connector.file_config.encoding,
-            #         'separator': connector.file_config.separator
-            #     },
-            #     # 'database_mapping': {
-            #     #     'products_mapping': {
-            #     #         'id': connector.database_mapping.products_mapping.id,
-            #     #         'type': connector.database_mapping.products_mapping.type,
-            #     #         'description': connector.database_mapping.products_mapping.description,
-            #     #     },
-            #     #     'sales_mapping': {
-            #     #         'id': connector.database_mapping.sales_mapping.id,
-            #     #         'date': connector.database_mapping.sales_mapping.date,
-            #     #         'amount': connector.database_mapping.sales_mapping.amount,
-            #     #         'value': connector.database_mapping.sales_mapping.value,
-            #     #         'product_id': connector.database_mapping.sales_mapping.product_id,
-            #     #         'salesperson_id': connector.database_mapping.sales_mapping.salesperson_id,
-            #     #         'client_cnpj': connector.database_mapping.sales_mapping.client_cnpj,
-            #     #     },
-            #     #     'salespeople_mapping': {
-            #     #         'id': connector.database_mapping.salespeople_mapping.id,
-            #     #         'manager_id': connector.database_mapping.salespeople_mapping.manager_id,
-            #     #     }
-            #     # }
-            # }
         )
 
     def read_connector(self, company_name: str) -> APIConnector:
@@ -99,3 +64,13 @@ class ElasticAdapter(DatabaseAdapter):
             )
 
         return response
+
+    def update_connector(self, company_name: str, connector: APIConnector) -> None:
+        body = {
+            'doc': connector.dict()
+        }
+        self.es.update(index='cdp-connectors', id=company_name, body=body)
+
+
+    def delete_connector(self, company_name: str) -> None:
+        self.es.delete(index='cdp-connectors', id=company_name)

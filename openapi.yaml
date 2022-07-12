@@ -33,15 +33,66 @@ paths:
             application/json:
               schema:
                 type: object
-
-    post:
-      description: Cria o conector para a empresa passada
+    put:
+      description: Atualiza um conector de uma empresa
       parameters:
         - name: company_name
           in: path
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Connector'
+      responses:
+        '204':
+          description: Conector atualizado com sucesso
+        '404':
+          description: Conector não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: Conector da empresa não encontrado
+      
+    delete:
+      description: Deleta o conector para a empresa passada
+      parameters:
+        - name: company_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Conector apagado
+        '404':
+          description: Conector não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: Conector da empresa não encontrado
+
+
+  /connectors:
+    post:
+      description: Cria o conector para a empresa passada
       requestBody:
         required: true
         content:
