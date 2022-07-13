@@ -1,8 +1,9 @@
+import os
 from pathlib import Path
 
 from ftplib import FTP, error_perm, error_reply
 
-from typing import List
+from typing import List, Optional
 
 from connector.base import ConnectionException, Connector
 from database.elastic import ElasticAdapter
@@ -62,6 +63,25 @@ class FTPConnector(Connector):
     def download_file(self, ftp: FTP, target_file_name: str, file_name: str):
         with open(target_file_name, 'wb') as out_file:
             ftp.retrbinary('RETR %s' % file_name, out_file.write)
+
+    def list_filenames(self, remote: Optional[bool] = True):
+        if remote:
+            filenames = self.list_filenames_remote()
+        else:
+            filenames = self.list_filenames_local()
+        return filenames
+    
+    def list_filenames_remote(self):
+        with FTP(self.host, self.user, self.password) as ftp:
+            ftp.cwd(self.directory)
+            filenames = ftp.nlst()
+        return filenames
+    
+    def list_filenames_local(self):
+        target_dir = f'data/{self.company_name}'
+        self.download_data(target_dir)
+        filenames = os.listdir(target_dir)
+        return filenames
 
     def extract_columns(self, file_path: Path) -> List[str]:
         factory = FileHandlerFactoryCreator.create_factory(self.file_config)

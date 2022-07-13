@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from abc import ABC, abstractmethod
 from models.file.file_config import FileConfig
@@ -31,6 +31,10 @@ class Connector(ABC):
 
     @abstractmethod
     def download_data(self, target_dir: str) -> List[Path]:
+        pass
+
+    @abstractmethod
+    def list_filenames(self, remote: Optional[bool] = True):
         pass
 
     @abstractmethod
