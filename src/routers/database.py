@@ -14,7 +14,7 @@ def update_company_database(company_name: str):
         adapter = ElasticAdapter()
         connector_model = adapter.read_connector(company_name)
         connector = ConnectorFactory.create_connector(connector_model)
-        # connector.download_data(local_target_dir)
+        connector.download_data(local_target_dir)
         connector.load_data()
     except ConnectorNotFoundError:
         raise HTTPException(
