@@ -30,9 +30,9 @@ class PostgresAdapter(DatabaseAdapter):
             with conn.cursor() as cur:
                 # self.create_backup(cur)
 
-                cur.execute(f'CREATE SCHEMA {company_name}')
+                cur.execute(f'CREATE SCHEMA "{company_name}"')
                 cur.execute(f'''
-                    CREATE TABLE {company_name}.products (
+                    CREATE TABLE "{company_name}".products (
                         id TEXT,
                         type TEXT,
                         description TEXT,
@@ -40,7 +40,7 @@ class PostgresAdapter(DatabaseAdapter):
                     )
                 ''')
                 cur.execute(f'''
-                    CREATE TABLE {company_name}.sales (
+                    CREATE TABLE "{company_name}".sales (
                         id TEXT,
                         date DATE,
                         amount INTEGER,
@@ -52,7 +52,7 @@ class PostgresAdapter(DatabaseAdapter):
                     )
                 ''')
                 cur.execute(f'''
-                    CREATE TABLE {company_name}.salespeople (
+                    CREATE TABLE "{company_name}".salespeople (
                         id TEXT,
                         manager_id TEXT,
                         company_name TEXT
@@ -65,7 +65,7 @@ class PostgresAdapter(DatabaseAdapter):
         cur.execute('SELECT schema_name FROM information_schema.schemata')
         schema = cur.fetchone()
         if schema is not None:
-            cur.execute(f'DROP SCHEMA IF EXISTS {company_name}_bkp')
+            cur.execute(f'DROP SCHEMA IF EXISTS "{company_name}_bkp"')
             # cur.execute(f'')
 
     def create_products(self, products: List[Product]):
@@ -87,7 +87,7 @@ class PostgresAdapter(DatabaseAdapter):
                     ) for product in products
                 ]
                 statement = f'''
-                    INSERT INTO {products[0].company_name}.products (
+                    INSERT INTO "{products[0].company_name}".products (
                         id, type, description, company_name
                     ) VALUES %s'''
                 execute_values(cur, statement, products_tuple)
@@ -115,7 +115,7 @@ class PostgresAdapter(DatabaseAdapter):
                     ) for sale in sales
                 ]
                 statement = f'''
-                    INSERT INTO {sales[0].company_name}.sales (
+                    INSERT INTO "{sales[0].company_name}".sales (
                         id, date, amount, value, product_id, salesperson_id, client_cnpj, company_name
                     ) VALUES %s'''
                 execute_values(cur, statement, sales_tuple)
@@ -138,8 +138,8 @@ class PostgresAdapter(DatabaseAdapter):
                     ) for salesperson in salespeople
                 ]
                 statement = f'''
-                    INSERT INTO {salespeople[0].company_name}.salespeople (
-                        id, type, description, company_name
+                    INSERT INTO "{salespeople[0].company_name}".salespeople (
+                        id, manager_id, company_name
                     ) VALUES %s'''
                 execute_values(cur, statement, salespeople_tuple)
 
