@@ -94,7 +94,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        '200':
           description: Conector apagado
         '404':
           description: Conector não encontrado

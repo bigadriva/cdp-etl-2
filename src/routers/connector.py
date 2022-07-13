@@ -11,7 +11,7 @@ from models.mapping.database import DatabaseMapping
 router = APIRouter()
 
 
-@router.post('')
+@router.post('', status_code=201)
 def create_connector(connector: ConnectorModel):
     elastic_adapter = ElasticAdapter()
     elastic_adapter.create_connector(connector)
@@ -30,12 +30,12 @@ def get_connector(company_name: str) -> ConnectorModel:
     return response
 
 
-@router.put('/{company_name}')
+@router.put('/{company_name}', status_code=201)
 def update_connector(company_name: str, connector: ConnectorModel):
     elastic_adapter = ElasticAdapter()
     elastic_adapter.update_connector(company_name, connector)
 
-@router.delete('/{company_name}')
+@router.delete('/{company_name}', status_code=200)
 def delete_connector(company_name: str):
     elastic_adapter = ElasticAdapter()
     elastic_adapter.delete_connector(company_name)
