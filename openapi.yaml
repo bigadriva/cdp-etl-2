@@ -140,6 +140,24 @@ paths:
                     example: Conector não encontrado para essa empresa
             
   /connectors/{company_name}/database_mapping:
+    get:
+      description: Busca o mapeamento do banco de dados no conector da empresa
+      parameters:
+        - name: company_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Conector encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseMapping'
+        '404':
+          description: Conector não encontrado para essa empresa
+
     post:
       description: Insere ou atualiza o mapeamento do banco de dados no conector
       parameters:

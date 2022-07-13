@@ -61,6 +61,39 @@ def get_filenames(company_name: str, remote: Optional[bool] = True) -> Dict[str,
     return response
 
 
+@router.get('/{company_name}/database_mapping')
+def get_database_mapping(company_name: str) -> DatabaseMapping:
+    """Busca o mapeamendo do banco de dados para a empresa passada.
+    
+    Parameters
+    ----------
+    company_name : str
+        O nome da empresa cujo mapeamento foi pedido
+
+    Raises
+    ------
+    ConectorNotFoundError
+        Conector não encontrado para essa empresa
+
+    Returns
+    -------
+    200:
+        Mapeamento do banco de dados
+    \n
+    404:
+        Conector não encontrado para essa empresa
+    """
+    response = None
+    try:
+        adapter = ElasticAdapter()
+        connector_model = adapter.read_connector(company_name)
+        response = connector_model.database_mapping
+    except ConnectorNotFoundError:
+        raise HTTPException(404, detail='Conector não encontrado para essa empresa')
+
+    return response
+
+
 @router.post('/{company_name}/database_mapping', status_code=201)
 def create_database_mapping(company_name: str, database_mapping: DatabaseMapping):
     """Cria um mapeamento de banco de dados para o conector da empresa.
