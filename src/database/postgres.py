@@ -28,8 +28,7 @@ class PostgresAdapter(DatabaseAdapter):
             database=self.dbname
         ) as conn:
             with conn.cursor() as cur:
-                # self.create_backup(cur)
-
+                cur.execute(f'DROP SCHEMA IF EXISTS "{company_name}" CASCADE')
                 cur.execute(f'CREATE SCHEMA "{company_name}"')
                 cur.execute(f'''
                     CREATE TABLE "{company_name}".raw_products (
@@ -60,13 +59,6 @@ class PostgresAdapter(DatabaseAdapter):
                 ''')
             
             conn.commit()
-
-    def create_backup(self, cur, company_name: str):
-        cur.execute('SELECT schema_name FROM information_schema.schemata')
-        schema = cur.fetchone()
-        if schema is not None:
-            cur.execute(f'DROP SCHEMA IF EXISTS "{company_name}_bkp"')
-            # cur.execute(f'')
 
     def create_products(self, products: List[Product]):
         with connect(
