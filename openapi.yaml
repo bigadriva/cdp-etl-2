@@ -9,6 +9,20 @@ servers:
   - url: http://localhost:5000
 
 paths:
+  /connectors:
+    post:
+      description: Cria o conector para a empresa passada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Connector'
+      responses:
+        '201':
+          description: Conector criado com sucesso
+
+
   /connectors/{company_name}:
     get:
       description: Retorna o conector para a empresa passada
@@ -33,6 +47,10 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Conector não encontrado para essa empresa
     put:
       description: Atualiza um conector de uma empresa
       parameters:
@@ -57,12 +75,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
+                  detail:
                     type: string
-                    example: failed
-                  message:
-                    type: string
-                    example: Conector da empresa não encontrado
+                    example: Conector não encontrado para essa empresa
       
     delete:
       description: Deleta o conector para a empresa passada
@@ -82,26 +97,49 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
+                  detail:
                     type: string
-                    example: failed
-                  message:
-                    type: string
-                    example: Conector da empresa não encontrado
+                    example: Conector não encontrado para essa empresa
 
 
-  /connectors:
-    post:
-      description: Cria o conector para a empresa passada
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Connector'
+  /connectors/{company_name}/filenames:
+    get:
+      description: Busca os nomes dos arquivos no servidor usando o conector já configurado
+      parameters:
+        - name: company_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: remote
+          in: path
+          required: false
+          schema:
+            type: bool
+
       responses:
-        '201':
-          description: Conector criado com sucesso
+        '200':
+          description: Nomes dos arquivos encontrados
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: ok
+                  message: Arquivos encontrados com sucesso
+                  filenames: ['filename1', 'filename2', 'filename3']
+        '404':
+          description: Conector não encontrado para essa empresa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Conector não encontrado para essa empresa
+            
+      
 
 components:
   schemas:
