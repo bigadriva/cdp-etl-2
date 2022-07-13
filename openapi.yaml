@@ -139,7 +139,31 @@ paths:
                     type: string
                     example: Conector não encontrado para essa empresa
             
-      
+  /connectors/{company_name}/database_mapping:
+    post:
+      description: Insere ou atualiza o mapeamento do banco de dados no conector
+      parameters:
+        - name: company_name
+          in: path
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatabaseMapping'
+
+      responses:
+        '201':
+          description: Mapeamento criado com sucesso
+        '404':
+          description: Conector não encontrado para essa empresa
+        '422':
+          description: Estrutura do mapeamento está errada
+
 
 components:
   schemas:
@@ -216,6 +240,35 @@ components:
         separator:
           type: string
           example: ","
+
+    DatabaseMapping:
+      type: object
+      required:
+        - products_mapping
+        - sales_mapping
+        - salespeople_mapping
+      properties:
+        products_mapping:
+          type: object
+          example:
+            id: "produto_id"
+            type: "tipo"
+            description: "desc_produto"
+        sales_mapping:
+          type: object
+          example:
+            id: "id"
+            date: "data"
+            amount: "quantidade"
+            value: valor_total
+            product_id: "produto_id"
+            salesperson_id: "vendedor_id"
+            client_cnpj: "cnpj"
+        salespeople_mapping:
+          type: object
+          example:
+            id: "vendedor_id"
+            manager_id: "gerente_id"
 
   examples:
     FileConfig:
