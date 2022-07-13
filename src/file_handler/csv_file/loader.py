@@ -1,4 +1,6 @@
 import csv
+import datetime
+import logging
 from typing import Optional
 from database.postgres import PostgresAdapter
 from models.database.product import Product
@@ -24,7 +26,9 @@ class CSVLoader(Loader):
             print('DB already initialized')
 
     def load(self, company_name: str, database_mapping: DatabaseMapping, file_config: FileConfig, batchsize: Optional[int] = 1e5):
+        print('Inicializando banco')
         self.initialize(company_name)
+        print('Iniciando carregamento do banco')
         self.load_products(company_name, database_mapping.products_mapping, file_config)
         self.load_sales(company_name, database_mapping.sales_mapping, file_config)
         self.load_salespeople(company_name, database_mapping.salespeople_mapping, file_config)
@@ -68,11 +72,12 @@ class CSVLoader(Loader):
                     self.database_adapter.create_sales(buffer)
                     buffer.clear()
 
+                print(sale)
                 buffer.append(Sale(
                     id=sale[sales_mapping.id],
-                    date=sale[sales_mapping.date],
+                    date=datetime.datetime.strptime(sale[sales_mapping.date], '%d/%m/%Y'),
                     amount=sale[sales_mapping.amount],
-                    value=sale[sales_mapping.value],
+                    value=sale[sales_mapping.value].replace(',', '.'),
                     product_id=sale[sales_mapping.product_id],
                     salesperson_id=sale[sales_mapping.salesperson_id],
                     client_cnpj=sale[sales_mapping.client_cnpj],
