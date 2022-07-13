@@ -21,6 +21,8 @@ paths:
       responses:
         '201':
           description: Conector criado com sucesso
+      tags:
+        - connectors
 
 
   /connectors/{company_name}:
@@ -51,6 +53,8 @@ paths:
                   detail:
                     type: string
                     example: Conector não encontrado para essa empresa
+      tags:
+        - connectors
     put:
       description: Atualiza um conector de uma empresa
       parameters:
@@ -78,6 +82,8 @@ paths:
                   detail:
                     type: string
                     example: Conector não encontrado para essa empresa
+      tags:
+        - connectors
       
     delete:
       description: Deleta o conector para a empresa passada
@@ -100,6 +106,8 @@ paths:
                   detail:
                     type: string
                     example: Conector não encontrado para essa empresa
+      tags:
+        - connectors
 
 
   /connectors/{company_name}/filenames:
@@ -138,6 +146,8 @@ paths:
                   detail:
                     type: string
                     example: Conector não encontrado para essa empresa
+      tags:
+        - connectors
             
   /connectors/{company_name}/database_mapping:
     get:
@@ -157,6 +167,8 @@ paths:
                 $ref: '#/components/schemas/DatabaseMapping'
         '404':
           description: Conector não encontrado para essa empresa
+      tags:
+        - connectors
 
     post:
       description: Insere ou atualiza o mapeamento do banco de dados no conector
@@ -181,6 +193,25 @@ paths:
           description: Conector não encontrado para essa empresa
         '422':
           description: Estrutura do mapeamento está errada
+      tags:
+        - connectors
+
+  /databases/{company_name}:
+    put:
+      description: Atualiza o banco de dados da empresa
+      parameters:
+        - name: company_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Atualização em andamento
+        '404':
+          description: Conector não encontrado para essa empresa
+      tags:
+        - databases
 
 
 components:
