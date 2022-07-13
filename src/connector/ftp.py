@@ -99,4 +99,4 @@ class FTPConnector(Connector):
     def load_data(self) -> None:
         factory = FileHandlerFactoryCreator.create_factory(self.file_config)
         loader = factory.create_loader()
-        loader.load(self.company_name.lower().replace(' ', '_'), self.database_mapping, self.file_config)
+        loader.load(self.company_name, self.database_mapping, self.file_config)
