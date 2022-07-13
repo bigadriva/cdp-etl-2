@@ -72,7 +72,6 @@ class CSVLoader(Loader):
                     self.database_adapter.create_sales(buffer)
                     buffer.clear()
 
-                print(sale)
                 buffer.append(Sale(
                     id=sale[sales_mapping.id],
                     date=datetime.datetime.strptime(sale[sales_mapping.date], '%d/%m/%Y'),
