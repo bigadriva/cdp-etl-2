@@ -1,7 +1,7 @@
 import os
 from typing import List
 
-from database.base import DatabaseAdapter
+from database.base import ConnectorNotFoundError, DatabaseAdapter
 
 from models.api.connector import APIConnector
 
@@ -9,7 +9,7 @@ from models.database.product import Product
 from models.database.sale import Sale
 from models.database.salesperson import Salesperson
 
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, NotFoundError
 
 from models.file.file_config import FileConfig
 
@@ -40,10 +40,13 @@ class ElasticAdapter(DatabaseAdapter):
         )
 
     def read_connector(self, company_name: str) -> APIConnector:
-        result = self.es.get(
-            index=f'cdp-connectors',
-            id=company_name
-        )
+        try:
+            result = self.es.get(
+                index=f'cdp-connectors',
+                id=company_name
+            )
+        except NotFoundError:
+            raise ConnectorNotFoundError()
 
         response = {}
 

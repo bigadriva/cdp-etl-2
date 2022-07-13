@@ -37,6 +37,25 @@ class DatabaseAdapter(ABC):
 
     @abstractmethod
     def read_connector(self, company_name: str) -> APIConnector:
+        """Busca o conector da empresa passada.
+        
+        Parameters
+        ----------
+        company_name : str
+            O nome da empresa cujo conector se busca
+
+        Raises
+        ------
+        ConnectorNotFoundError
+            Se não houver um conector para a empresa passada no banco, então
+            será gerada a exceção ConnectorNotFoundError
+
+        Returns
+        -------
+        APIConnector
+            O modelo de dados do conector preenchido com as informações
+            relevantes
+        """
         pass
 
     @abstractmethod
@@ -46,3 +65,8 @@ class DatabaseAdapter(ABC):
     @abstractmethod
     def delete_connector(self, company_name: str) -> None:
         pass
+
+
+class ConnectorNotFoundError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
