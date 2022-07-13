@@ -6,7 +6,7 @@ from models.file.file_config import FileConfig
 from models.mapping.database import DatabaseMapping
 
 
-class APIConnector(BaseModel):
+class ConnectorModel(BaseModel):
     company_name: str
     type: str
     host: str

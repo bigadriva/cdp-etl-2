@@ -1,10 +1,10 @@
 from connector.base import Connector
 from connector.ftp import FTPConnector
-from models.api.connector import APIConnector
+from models.api.connector import ConnectorModel
 
 class ConnectorFactory:
     @staticmethod
-    def create_connector(api_connector: APIConnector) -> Connector:
+    def create_connector(api_connector: ConnectorModel) -> Connector:
         if api_connector.type == 'ftp':
             connector = FTPConnector(
                 api_connector.company_name,

@@ -2,7 +2,7 @@ import os
 from typing import List
 
 from database.base import DatabaseAdapter
-from models.api.connector import APIConnector
+from models.api.connector import ConnectorModel
 
 from models.database.product import Product
 from models.database.sale import Sale
@@ -135,11 +135,11 @@ class PostgresAdapter(DatabaseAdapter):
                     ) VALUES %s'''
                 execute_values(cur, statement, salespeople_tuple)
 
-    def create_connector(self, connector: APIConnector):
+    def create_connector(self, connector: ConnectorModel):
         raise NotImplementedError()
-    def read_connector(self, company_name: str) -> APIConnector:
+    def read_connector(self, company_name: str) -> ConnectorModel:
         raise NotImplementedError()
-    def update_connector(self, company_name: str, connector: APIConnector) -> None:
+    def update_connector(self, company_name: str, connector: ConnectorModel) -> None:
         raise NotImplementedError()
     def delete_connector(self, company_name: str) -> None:
         raise NotImplementedError()

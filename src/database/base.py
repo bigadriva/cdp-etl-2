@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from models.api.connector import APIConnector
+from models.api.connector import ConnectorModel
 
 from models.database.product import Product
 from models.database.sale import Sale
@@ -32,11 +32,11 @@ class DatabaseAdapter(ABC):
         pass
 
     @abstractmethod
-    def create_connector(self, connector: APIConnector):
+    def create_connector(self, connector: ConnectorModel):
         pass
 
     @abstractmethod
-    def read_connector(self, company_name: str) -> APIConnector:
+    def read_connector(self, company_name: str) -> ConnectorModel:
         """Busca o conector da empresa passada.
         
         Parameters
@@ -52,14 +52,14 @@ class DatabaseAdapter(ABC):
 
         Returns
         -------
-        APIConnector
+        ConnectorModel
             O modelo de dados do conector preenchido com as informações
             relevantes
         """
         pass
 
     @abstractmethod
-    def update_connector(self, company_name: str, connector: APIConnector) -> None:
+    def update_connector(self, company_name: str, connector: ConnectorModel) -> None:
         pass
 
     @abstractmethod

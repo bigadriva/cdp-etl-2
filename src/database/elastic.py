@@ -3,7 +3,7 @@ from typing import List
 
 from database.base import ConnectorNotFoundError, DatabaseAdapter
 
-from models.api.connector import APIConnector
+from models.api.connector import ConnectorModel
 
 from models.database.product import Product
 from models.database.sale import Sale
@@ -32,14 +32,14 @@ class ElasticAdapter(DatabaseAdapter):
     def create_salespeople(self, salespeople: List[Salesperson]):
         raise NotImplementedError()
 
-    def create_connector(self, connector: APIConnector):
+    def create_connector(self, connector: ConnectorModel):
         self.es.index(
             index=f'cdp-connectors',
             id=connector.company_name,
             document=connector.dict()
         )
 
-    def read_connector(self, company_name: str) -> APIConnector:
+    def read_connector(self, company_name: str) -> ConnectorModel:
         try:
             result = self.es.get(
                 index=f'cdp-connectors',
@@ -57,7 +57,7 @@ class ElasticAdapter(DatabaseAdapter):
             if 'database_mapping' in response:
                 database_mapping = response['database_mapping']
 
-            response = APIConnector(
+            response = ConnectorModel(
                 company_name=company_name,
                 type=response['type'],
                 host=response['host'],
@@ -75,7 +75,7 @@ class ElasticAdapter(DatabaseAdapter):
 
         return response
 
-    def update_connector(self, company_name: str, connector: APIConnector) -> None:
+    def update_connector(self, company_name: str, connector: ConnectorModel) -> None:
         body = {
             'doc': connector.dict()
         }

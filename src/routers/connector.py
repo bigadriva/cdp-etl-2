@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from connector.factory import ConnectorFactory
 from database.base import ConnectorNotFoundError
 
-from models.api.connector import APIConnector
+from models.api.connector import ConnectorModel
 
 from database.elastic import ElasticAdapter
 from models.mapping.database import DatabaseMapping
@@ -12,12 +12,12 @@ router = APIRouter()
 
 
 @router.post('')
-def create_connector(connector: APIConnector):
+def create_connector(connector: ConnectorModel):
     elastic_adapter = ElasticAdapter()
     elastic_adapter.create_connector(connector)
 
 @router.get('/{company_name}')
-def get_connector(company_name: str) -> APIConnector:
+def get_connector(company_name: str) -> ConnectorModel:
     try:
         elastic_adapter = ElasticAdapter()
         response = elastic_adapter.read_connector(company_name)
@@ -31,7 +31,7 @@ def get_connector(company_name: str) -> APIConnector:
 
 
 @router.put('/{company_name}')
-def update_connector(company_name: str, connector: APIConnector):
+def update_connector(company_name: str, connector: ConnectorModel):
     elastic_adapter = ElasticAdapter()
     elastic_adapter.update_connector(company_name, connector)
 
