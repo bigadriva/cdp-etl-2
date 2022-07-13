@@ -1,5 +1,7 @@
-from typing import List
-from fastapi import APIRouter
+from typing import Dict, List, Optional
+from fastapi import APIRouter, HTTPException
+from connector.factory import ConnectorFactory
+from database.base import ConnectorNotFoundError
 
 from models.api.connector import APIConnector
 
@@ -15,8 +17,17 @@ def create_connector(connector: APIConnector):
 
 @router.get('/{company_name}')
 def get_connector(company_name: str) -> APIConnector:
-    elastic_adapter = ElasticAdapter()
-    return elastic_adapter.read_connector(company_name)
+    try:
+        elastic_adapter = ElasticAdapter()
+        response = elastic_adapter.read_connector(company_name)
+    except ConnectorNotFoundError:
+        raise HTTPException(
+            status_code=404,
+            detail='Conector não encontrado para essa empresa'
+        )
+
+    return response
+
 
 @router.put('/{company_name}')
 def update_connector(company_name: str, connector: APIConnector):
@@ -27,3 +38,23 @@ def update_connector(company_name: str, connector: APIConnector):
 def delete_connector(company_name: str):
     elastic_adapter = ElasticAdapter()
     elastic_adapter.delete_connector(company_name)
+
+
+@router.get('/{company_name}/filenames')
+def get_filenames(company_name: str, remote: Optional[bool] = True) -> Dict[str, List[str]]:
+    response = {
+        'status': 'ok',
+        'message': 'Nomes de arquivos encontrados com sucesso',
+        'filenames': []
+    }
+    try:
+        adapter = ElasticAdapter()
+        connector_model = adapter.read_connector(company_name)
+        connector = ConnectorFactory.create_connector(connector_model)
+        filenames = connector.list_filenames()
+        response['filenames'].extend(filenames)
+    except ConnectorNotFoundError:
+        response['status'] = 'failed'
+        response['message'] = 'Conector não encontrado para essa empresa'
+
+    return response
