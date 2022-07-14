@@ -1,7 +1,7 @@
 import os
 from typing import List
 
-from database.base import ConnectorNotFoundError, DatabaseAdapter
+from database.base import ConnectorNotFoundError, DatabaseAdapter, ProcessorNotFoundError
 
 from models.api.connector import ConnectorModel
 
@@ -12,6 +12,7 @@ from models.database.salesperson import Salesperson
 from elasticsearch import Elasticsearch, NotFoundError
 
 from models.file.file_config import FileConfig
+from models.processing.processor import ProcessorModel
 
 class ElasticAdapter(DatabaseAdapter):
     def __init__(self) -> None:
@@ -84,3 +85,27 @@ class ElasticAdapter(DatabaseAdapter):
 
     def delete_connector(self, company_name: str) -> None:
         self.es.delete(index='cdp-connectors', id=company_name)
+
+    def create_processor(self, processor: ProcessorModel) -> None:
+        self.es.index(
+            index='cdp-processors',
+            id=processor.company_name,
+            document=processor.dict()
+        )
+
+    def read_processor(self, company_name: str) -> ProcessorModel:
+        try:
+            result = self.es.get(
+                index='cdp-processors',
+                id=company_name
+            )
+        except NotFoundError:
+            raise ProcessorNotFoundError()
+
+        response = {}
+
+        if result['found']:
+            response = result['_source']
+            response = ProcessorModel(**response)
+
+        return response

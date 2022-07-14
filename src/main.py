@@ -16,6 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers.connector import router as connector_router
 from routers.database import router as database_router
+from routers.processor import router as processor_router
 
 def main():
     load_dotenv()
@@ -36,6 +37,11 @@ def main():
         database_router,
         tags=['database'],
         prefix='/databases'
+    )
+    app.include_router(
+        processor_router,
+        tags=['processor'],
+        prefix='/processors'
     )
 
     uvicorn.run(app, host='0.0.0.0', port=5000)
