@@ -213,6 +213,42 @@ paths:
       tags:
         - databases
 
+  /processors:
+    post:
+      description: Cria um processador
+      requestBody:
+        content:        
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Processor'
+      responses:
+        '201':
+          description: Processsador criado com sucesso
+        '422':
+          description: Formato do processador inválido
+
+      tags:
+        - processors
+
+  /processors/{company_name}:
+    get:
+      description: Busca o processador de uma empresa
+      parameters:
+        - name: company_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Processador encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Processor'
+      tags:
+        - processors
+
 
 components:
   schemas:
@@ -318,6 +354,43 @@ components:
           example:
             id: "vendedor_id"
             manager_id: "gerente_id"
+
+    Processor:
+      type: object
+      required:
+        - company_name
+        - parsers
+      properties:
+        company_name:
+          type: string
+          example: Driva Tecnologia
+        field_aggregators:
+          type: array
+          example: [
+            {
+              "type": "field_aggregator",
+              "model_applied": "products",
+              "field_names": ["campo1", "campo2", "campo3"],
+              "method": "sum"
+            },
+            {
+              "type": "field_aggregator",
+              "model_applied": "sales",
+              "field_names": ["campo1", "campo2", "campo3"],
+              "method": "sum"
+            }
+          ]
+        date_formatters:
+          type: array
+          example: [
+            {
+              "type": "date_formatter",
+              "model_applied": "sales",
+              "field_name": "data",
+              "date_format": "%d/%m/%Y"
+            }
+          ]
+
 
   examples:
     FileConfig:
