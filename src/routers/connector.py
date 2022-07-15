@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from connector.factory import ConnectorFactory
 from database.base import ConnectorNotFoundError
 
-from models.api.connector import ConnectorModel
+from models.connector.connector import ConnectorModel
 
 from database.elastic import ElasticAdapter
 from models.mapping.database import DatabaseMapping

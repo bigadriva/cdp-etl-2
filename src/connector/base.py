@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 from models.file.file_config import FileConfig
 
 from models.mapping.database import DatabaseMapping
+from processing.processor import Processor
 
 class Connector:
     pass
@@ -46,7 +47,11 @@ class Connector(ABC):
         pass
 
     @abstractmethod
-    def load_data(self) -> None:
+    def transform(self, processor: Processor):
+        pass
+
+    @abstractmethod
+    def load(self) -> None:
         pass
 
 

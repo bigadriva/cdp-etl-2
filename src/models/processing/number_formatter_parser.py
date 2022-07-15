@@ -3,7 +3,7 @@ from typing import List
 from models.processing.entity_parser import EntityParserModel
 
 
-class FieldAggregatorParserModel(EntityParserModel):
+class NumberFormatterParserModel(EntityParserModel):
     field_names: List[str]
-    target_field_name: str
-    method: str
+    thousand_separator: str
+    decimal_separator: str
