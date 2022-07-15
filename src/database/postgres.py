@@ -81,7 +81,7 @@ class PostgresAdapter(DatabaseAdapter):
                     ) for product in products
                 ]
                 statement = f'''
-                    INSERT INTO "{products[0].company_name}".raw_products (
+                    INSERT INTO "{products[0].company_name.replace(' ', '_').lower()}".raw_products (
                         id, type, description, company_name
                     ) VALUES %s'''
                 execute_values(cur, statement, products_tuple)
@@ -109,7 +109,7 @@ class PostgresAdapter(DatabaseAdapter):
                     ) for sale in sales
                 ]
                 statement = f'''
-                    INSERT INTO "{sales[0].company_name}".raw_sales (
+                    INSERT INTO "{sales[0].company_name.replace(' ', '_').lower()}".raw_sales (
                         id, date, amount, value, product_id, salesperson_id, client_cnpj, company_name
                     ) VALUES %s'''
                 execute_values(cur, statement, sales_tuple)
@@ -132,7 +132,7 @@ class PostgresAdapter(DatabaseAdapter):
                     ) for salesperson in salespeople
                 ]
                 statement = f'''
-                    INSERT INTO "{salespeople[0].company_name}".raw_salespeople (
+                    INSERT INTO "{salespeople[0].company_name.replace(' ', '_').lower()}".raw_salespeople (
                         id, manager_id, company_name
                     ) VALUES %s'''
                 execute_values(cur, statement, salespeople_tuple)
