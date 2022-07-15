@@ -81,6 +81,8 @@ class CSVLoader(Loader):
                     buffer.append(Sale(
                         id=sale[sales_mapping.id],
                         date=sale[sales_mapping.date],
+                        # Convertemos pra float primeiro, porque se vier com
+                        # ponto ('1.0'), o python gera exceção.
                         amount=int(float(sale[sales_mapping.amount])),
                         value=float(sale[sales_mapping.value]),
                         product_id=sale[sales_mapping.product_id],
