@@ -11,6 +11,7 @@ from database.elastic import ElasticAdapter
 from file_handler.file_handler_factory_creator import FileHandlerFactoryCreator
 
 from models.file.file_config import FileConfig
+from processing.processor import Processor
 
 
 class FTPConnector(Connector):
@@ -96,7 +97,12 @@ class FTPConnector(Connector):
         validator = factory.create_mapping_validator()
         return validator.validate_mapping(self.database_mapping)
 
-    def load_data(self) -> None:
+    def transform(self, processor: Processor):
+        factory = FileHandlerFactoryCreator.create_factory(self.file_config)
+        transformer = factory.create_transformer()
+        transformer.transform(self.company_name, self.database_mapping, self.file_config, processor)
+
+    def load(self) -> None:
         factory = FileHandlerFactoryCreator.create_factory(self.file_config)
         loader = factory.create_loader()
         loader.load(self.company_name, self.database_mapping, self.file_config)

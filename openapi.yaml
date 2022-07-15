@@ -295,10 +295,12 @@ components:
           type: object
           example:
             products_mapping:
+              model_filename: produtos.csv
               id: "produto_id"
               type: "tipo"
               description: "desc_produto"
             sales_mapping:
+              model_filename: vendas.csv
               id: "id"
               date: "data"
               amount: "quantidade"
@@ -307,6 +309,7 @@ components:
               salesperson_id: "vendedor_id"
               client_cnpj: "cnpj"
             salespeople_mapping:
+              model_filename: vendedores.csv
               id: "vendedor_id"
               manager_id: "gerente_id"
 
@@ -336,12 +339,14 @@ components:
         products_mapping:
           type: object
           example:
+            model_filename: "produtos.csv"
             id: "produto_id"
             type: "tipo"
             description: "desc_produto"
         sales_mapping:
           type: object
           example:
+            model_filename: "vendas.csv"
             id: "id"
             date: "data"
             amount: "quantidade"
@@ -352,6 +357,7 @@ components:
         salespeople_mapping:
           type: object
           example:
+            model_filename: "vendedores.csv"
             id: "vendedor_id"
             manager_id: "gerente_id"
 

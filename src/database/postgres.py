@@ -2,7 +2,7 @@ import os
 from typing import List
 
 from database.base import DatabaseAdapter
-from models.api.connector import ConnectorModel
+from models.connector.connector import ConnectorModel
 
 from models.database.product import Product
 from models.database.sale import Sale
@@ -10,6 +10,8 @@ from models.database.salesperson import Salesperson
 
 from psycopg2 import connect
 from psycopg2.extras import execute_values
+
+from models.processing.processor import ProcessorModel
 
 class PostgresAdapter(DatabaseAdapter):
     def __init__(self):
@@ -142,4 +144,8 @@ class PostgresAdapter(DatabaseAdapter):
     def update_connector(self, company_name: str, connector: ConnectorModel) -> None:
         raise NotImplementedError()
     def delete_connector(self, company_name: str) -> None:
+        raise NotImplementedError()
+    def create_processor(self, processor: ProcessorModel) -> None:
+        raise NotImplementedError()
+    def read_processor(self, company_name: str) -> ProcessorModel:
         raise NotImplementedError()

@@ -1,6 +1,6 @@
 from connector.base import Connector
 from connector.ftp import FTPConnector
-from models.api.connector import ConnectorModel
+from models.connector.connector import ConnectorModel
 
 class ConnectorFactory:
     @staticmethod

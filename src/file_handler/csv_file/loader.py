@@ -35,7 +35,7 @@ class CSVLoader(Loader):
 
     def load_products(self, company_name: str, products_mapping: ProductsMapping, file_config: FileConfig, batchsize=1e5):
         with open(
-            products_mapping.local_data_path,
+            f'data/{company_name}/{products_mapping.model_filename}',
             'r',
             encoding=file_config.encoding
         ) as csv_file:
@@ -46,12 +46,15 @@ class CSVLoader(Loader):
                     self.database_adapter.create_products(buffer)
                     buffer.clear()
 
-                buffer.append(Product(
-                    id=product[products_mapping.id],
-                    type=product[products_mapping.type],
-                    description=product[products_mapping.description],
-                    company_name=company_name
-                ))
+                try:
+                    buffer.append(Product(
+                        id=product[products_mapping.id],
+                        type=product[products_mapping.type],
+                        description=product[products_mapping.description],
+                        company_name=company_name
+                    ))
+                except KeyError:
+                    print(product)
 
             # Checando por produtos restantes (última iteração teve menos que batchsize)
             if len(buffer) > 0:
@@ -61,7 +64,7 @@ class CSVLoader(Loader):
 
     def load_sales(self, company_name: str, sales_mapping: SalesMapping, file_config: FileConfig, batchsize=1e5):
         with open(
-            sales_mapping.local_data_path,
+            f'data/{company_name}/{sales_mapping.model_filename}',
             'r',
             encoding=file_config.encoding
         ) as csv_file:
@@ -90,7 +93,7 @@ class CSVLoader(Loader):
 
     def load_salespeople(self, company_name: str, salespeople_mapping: SalespeopleMapping, file_config: FileConfig, batchsize=1e5):
         with open(
-            salespeople_mapping.local_data_path,
+            f'data/{company_name}/{salespeople_mapping.model_filename}',
             'r',
             encoding=file_config.encoding
         ) as csv_file:

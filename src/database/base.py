@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from models.api.connector import ConnectorModel
+from models.connector.connector import ConnectorModel
 
 from models.database.product import Product
 from models.database.sale import Sale
