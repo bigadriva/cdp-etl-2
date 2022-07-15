@@ -13,10 +13,16 @@ class Processor:
         self.model = model
         self.parsers = [
             EntityParserFactory.create_parser(parser)
-            for parser in self.model.field_aggregators
+            for parser in self.model.number_formatters
         ] + [
             EntityParserFactory.create_parser(parser)
             for parser in self.model.date_formatters
+        ] + [
+            # Primeiro temos que executar os formatadores, para que quando
+            # chegue nos agregadores, os números já estejam formatados e do tipo
+            # inteiro ou float, por exemplo.
+            EntityParserFactory.create_parser(parser)
+            for parser in self.model.field_aggregators
         ]
 
     def process(self, entity: Dict[str, str]) -> Dict[str, str]:

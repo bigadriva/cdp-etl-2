@@ -396,6 +396,20 @@ components:
               "date_format": "%d/%m/%Y"
             }
           ]
+        number_formatters:
+          type: array
+          example: [
+            {
+              "type": "number_formatter",
+              "model_applied": "sales",
+              "field_names": [
+                "val1",
+                "val2"
+              ],
+              "thousand_separator": ".",
+              "decimal_separator": ","
+            }
+          ]
 
 
   examples:

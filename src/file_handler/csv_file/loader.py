@@ -2,6 +2,8 @@ import csv
 import datetime
 import logging
 from typing import Optional
+
+from pydantic import ValidationError
 from database.postgres import PostgresAdapter
 from models.database.product import Product
 from models.database.sale import Sale
@@ -79,14 +81,16 @@ class CSVLoader(Loader):
                     buffer.append(Sale(
                         id=sale[sales_mapping.id],
                         date=sale[sales_mapping.date],
-                        amount=sale[sales_mapping.amount],
-                        value=sale[sales_mapping.value].replace(',', '.'),
+                        amount=int(float(sale[sales_mapping.amount])),
+                        value=float(sale[sales_mapping.value]),
                         product_id=sale[sales_mapping.product_id],
                         salesperson_id=sale[sales_mapping.salesperson_id],
                         client_cnpj=sale[sales_mapping.client_cnpj],
                         company_name=company_name
                     ))
                 except KeyError:
+                    print(sale)
+                except ValidationError:
                     print(sale)
 
             # Checando por produtos restantes (última iteração teve menos que batchsize)
