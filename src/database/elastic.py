@@ -35,7 +35,7 @@ class ElasticAdapter(DatabaseAdapter):
 
     def create_connector(self, connector: ConnectorModel):
         self.es.index(
-            index=f'cdp-connectors',
+            index=f'cdp_connectors',
             id=connector.company_name,
             document=connector.dict()
         )
@@ -43,7 +43,7 @@ class ElasticAdapter(DatabaseAdapter):
     def read_connector(self, company_name: str) -> ConnectorModel:
         try:
             result = self.es.get(
-                index=f'cdp-connectors',
+                index=f'cdp_connectors',
                 id=company_name
             )
         except NotFoundError:
@@ -80,15 +80,15 @@ class ElasticAdapter(DatabaseAdapter):
         body = {
             'doc': connector.dict()
         }
-        self.es.update(index='cdp-connectors', id=company_name, body=body)
+        self.es.update(index='cdp_connectors', id=company_name, body=body)
 
 
     def delete_connector(self, company_name: str) -> None:
-        self.es.delete(index='cdp-connectors', id=company_name)
+        self.es.delete(index='cdp_connectors', id=company_name)
 
     def create_processor(self, processor: ProcessorModel) -> None:
         self.es.index(
-            index='cdp-processors',
+            index='cdp_processors',
             id=processor.company_name,
             document=processor.dict()
         )
@@ -96,7 +96,7 @@ class ElasticAdapter(DatabaseAdapter):
     def read_processor(self, company_name: str) -> ProcessorModel:
         try:
             result = self.es.get(
-                index='cdp-processors',
+                index='cdp_processors',
                 id=company_name
             )
         except NotFoundError:
