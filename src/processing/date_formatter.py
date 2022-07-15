@@ -17,5 +17,5 @@ class DateFormatterParser(EntityParser):
             entity[field_name] = datetime.datetime.strptime(
                 entity[field_name],
                 date_format
-            )
+            ).date()
         return entity

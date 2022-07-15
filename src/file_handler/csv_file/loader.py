@@ -75,16 +75,19 @@ class CSVLoader(Loader):
                     self.database_adapter.create_sales(buffer)
                     buffer.clear()
 
-                buffer.append(Sale(
-                    id=sale[sales_mapping.id],
-                    date=datetime.datetime.strptime(sale[sales_mapping.date], '%d/%m/%Y'),
-                    amount=sale[sales_mapping.amount],
-                    value=sale[sales_mapping.value].replace(',', '.'),
-                    product_id=sale[sales_mapping.product_id],
-                    salesperson_id=sale[sales_mapping.salesperson_id],
-                    client_cnpj=sale[sales_mapping.client_cnpj],
-                    company_name=company_name
-                ))
+                try:
+                    buffer.append(Sale(
+                        id=sale[sales_mapping.id],
+                        date=sale[sales_mapping.date],
+                        amount=sale[sales_mapping.amount],
+                        value=sale[sales_mapping.value].replace(',', '.'),
+                        product_id=sale[sales_mapping.product_id],
+                        salesperson_id=sale[sales_mapping.salesperson_id],
+                        client_cnpj=sale[sales_mapping.client_cnpj],
+                        company_name=company_name
+                    ))
+                except KeyError:
+                    print(sale)
 
             # Checando por produtos restantes (última iteração teve menos que batchsize)
             if len(buffer) > 0:
@@ -99,16 +102,19 @@ class CSVLoader(Loader):
         ) as csv_file:
             reader = csv.DictReader(csv_file, delimiter=file_config.separator)
             buffer = []
-            for sale in reader:
+            for salesperson in reader:
                 if len(buffer) == batchsize:
                     self.database_adapter.create_sales(buffer)
                     buffer.clear()
 
-                buffer.append(Salesperson(
-                    id=sale[salespeople_mapping.id],
-                    manager_id=sale[salespeople_mapping.manager_id],
-                    company_name=company_name
-                ))
+                try:
+                    buffer.append(Salesperson(
+                        id=salesperson[salespeople_mapping.id],
+                        manager_id=salesperson[salespeople_mapping.manager_id],
+                        company_name=company_name
+                    ))
+                except KeyError:
+                    print(salesperson)
 
             # Checando por produtos restantes (última iteração teve menos que batchsize)
             if len(buffer) > 0:

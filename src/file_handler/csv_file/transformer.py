@@ -23,15 +23,33 @@ class CSVTransformer(Transformer):
             mapping: Mapping = mappings[model]
             with tempfile.TemporaryFile('w+') as tmpfile:
                 with open(f'data/{company_name}/{mapping.model_filename}', 'r', encoding=file_config.encoding) as csvfile:
-                    reader = csv.DictReader(csvfile, delimiter=file_config.separator)
+                    reader = csv.DictReader(csvfile, delimiter=file_config.separator, quotechar='"')
+                    first_row = next(reader)
+                    first_processed_row = processor.process(first_row)
+                    writer = csv.DictWriter(
+                        tmpfile,
+                        list(first_processed_row.keys()),
+                        delimiter=file_config.separator,
+                        quotechar='"'
+                    )
+                    writer.writeheader()
+                    writer.writerow(first_processed_row)
                     for row in reader:
                         processed_row = processor.process(row)
-                        writer = csv.DictWriter(tmpfile, list(processed_row.keys()))
                         writer.writerow(processed_row)
                 with open(f'data/{company_name}/{mapping.model_filename}', 'w', encoding=file_config.encoding) as csvfile:
                     tmpfile.seek(0)
-                    reader = csv.DictReader(tmpfile, delimiter=file_config.separator)
-                    writer = csv.DictWriter(csvfile, reader.fieldnames, delimiter=file_config.separator)
+                    reader = csv.DictReader(
+                        tmpfile,
+                        delimiter=file_config.separator,
+                        quotechar='"'
+                    )
+                    writer = csv.DictWriter(
+                        csvfile,
+                        reader.fieldnames,
+                        delimiter=file_config.separator,
+                        quotechar='"'
+                    )
                     writer.writeheader()
                     for row in reader:
                         writer.writerow(row)
