@@ -31,35 +31,59 @@ class PostgresAdapter(DatabaseAdapter):
             database=self.dbname
         ) as conn:
             with conn.cursor() as cur:
-                cur.execute(f'DROP SCHEMA IF EXISTS "{company_name}" CASCADE')
-                cur.execute(f'CREATE SCHEMA "{company_name}"')
-                cur.execute(f'''
-                    CREATE TABLE "{company_name}".raw_products (
-                        id TEXT,
-                        type TEXT,
-                        description TEXT,
-                        company_name TEXT
-                    )
+                # cur.execute(f'DROP SCHEMA IF EXISTS "{company_name}" CASCADE')
+                # cur.execute(f'CREATE SCHEMA "{company_name}"')
+                cur.execute('''
+                    SELECT schema_name
+                    FROM information_schema.schemata
+                    WHERE schema_name = 'raw'
                 ''')
-                cur.execute(f'''
-                    CREATE TABLE "{company_name}".raw_sales (
-                        id TEXT,
-                        date DATE,
-                        amount INTEGER,
-                        value NUMERIC,
-                        product_id TEXT,
-                        salesperson_id TEXT,
-                        client_cnpj TEXT,
-                        company_name TEXT
+
+                if cur.fetchone() is None:
+                    # Se não houver um resultado, então o schema não está criado
+                    cur.execute('CREATE SCHEMA IF NOT EXISTS raw')
+                    cur.execute(f'''
+                        CREATE TABLE raw.products (
+                            id TEXT,
+                            type TEXT,
+                            description TEXT,
+                            company_name TEXT
+                        )
+                    ''')
+                    cur.execute(f'''
+                        CREATE TABLE raw.sales (
+                            id TEXT,
+                            date DATE,
+                            amount INTEGER,
+                            value NUMERIC,
+                            product_id TEXT,
+                            salesperson_id TEXT,
+                            client_cnpj TEXT,
+                            company_name TEXT
+                        )
+                    ''')
+                    cur.execute(f'''
+                        CREATE TABLE raw.salespeople (
+                            id TEXT,
+                            manager_id TEXT,
+                            company_name TEXT
+                        )
+                    ''')
+                else:
+                    # Caso contrário, o schema já existe e precisamos deletar a
+                    # base antiga
+                    cur.execute(
+                        'DELETE FROM raw.products WHERE company_name = %s',
+                        (company_name,)
                     )
-                ''')
-                cur.execute(f'''
-                    CREATE TABLE "{company_name}".raw_salespeople (
-                        id TEXT,
-                        manager_id TEXT,
-                        company_name TEXT
+                    cur.execute(
+                        'DELETE FROM raw.sales WHERE company_name = %s',
+                        (company_name,)
                     )
-                ''')
+                    cur.execute(
+                        'DELETE FROM raw.salespeople WHERE company_name = %s',
+                        (company_name,)
+                    )
             
             conn.commit()
 
@@ -81,13 +105,10 @@ class PostgresAdapter(DatabaseAdapter):
                         product.company_name
                     ) for product in products
                 ]
-                schema = products[0].company_name.replace(' ', '_').lower()
-                print(schema)
-                statement = f'''
-                    INSERT INTO "{schema}".raw_products (
+                statement = '''
+                    INSERT INTO raw.products (
                         id, type, description, company_name
                     ) VALUES %s'''
-                print(statement)
                 execute_values(cur, statement, products_tuple)
 
     def create_sales(self, sales: List[Sale]):
@@ -112,8 +133,8 @@ class PostgresAdapter(DatabaseAdapter):
                         sale.company_name
                     ) for sale in sales
                 ]
-                statement = f'''
-                    INSERT INTO "{sales[0].company_name.replace(' ', '_').lower()}".raw_sales (
+                statement = '''
+                    INSERT INTO raw.sales (
                         id, date, amount, value, product_id, salesperson_id, client_cnpj, company_name
                     ) VALUES %s'''
                 execute_values(cur, statement, sales_tuple)
@@ -136,7 +157,7 @@ class PostgresAdapter(DatabaseAdapter):
                     ) for salesperson in salespeople
                 ]
                 statement = f'''
-                    INSERT INTO "{salespeople[0].company_name.replace(' ', '_').lower()}".raw_salespeople (
+                    INSERT INTO raw.salespeople (
                         id, manager_id, company_name
                     ) VALUES %s'''
                 execute_values(cur, statement, salespeople_tuple)
