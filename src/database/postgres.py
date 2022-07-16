@@ -22,6 +22,7 @@ class PostgresAdapter(DatabaseAdapter):
         self.dbname = os.getenv('POSTGRES_DBNAME')
 
     def initialize_db(self, company_name: str):
+        company_name = company_name.replace(' ', '_').lower()
         with connect(
             host=self.host,
             port=self.port,
@@ -80,10 +81,13 @@ class PostgresAdapter(DatabaseAdapter):
                         product.company_name
                     ) for product in products
                 ]
+                schema = products[0].company_name.replace(' ', '_').lower()
+                print(schema)
                 statement = f'''
-                    INSERT INTO "{products[0].company_name.replace(' ', '_').lower()}".raw_products (
+                    INSERT INTO "{schema}".raw_products (
                         id, type, description, company_name
                     ) VALUES %s'''
+                print(statement)
                 execute_values(cur, statement, products_tuple)
 
     def create_sales(self, sales: List[Sale]):
