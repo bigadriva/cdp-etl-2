@@ -294,6 +294,7 @@ components:
         database_mapping:
           type: object
           example:
+            model_filename: Driva Tecnologia
             products_mapping:
               model_filename: produtos.csv
               id: "produto_id"

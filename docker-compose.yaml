@@ -9,10 +9,14 @@ services:
       - 9300:9300
     environment:
       - discovery.type=single-node
+    deploy:
+      resources:
+        limits:
+          memory: 2G
 
-  postgres:
-    container_name: postgres
-    image: postgres
+  citus:
+    container_name: citus
+    image: citusdata/citus
     ports:
       - 5432:5432
     environment:
