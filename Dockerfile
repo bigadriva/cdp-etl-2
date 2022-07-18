@@ -12,14 +12,14 @@ RUN poetry install
 COPY openapi.yaml .
 COPY src src
 
-ENV POSTGRES_HOST=192.168.1.64
+ENV POSTGRES_HOST=drivacluster.ddns.net
 ENV POSTGRES_PORT=5432
-ENV POSTGRES_USER=postgres
-ENV POSTGRES_PASSWORD=postgres
-ENV POSTGRES_DBNAME=postgres
+ENV POSTGRES_USER=cdp
+ENV POSTGRES_PASSWORD=password_cdp_password
+ENV POSTGRES_DBNAME=cdp
 
-ENV ELASTIC_HOST=http://192.168.1.64:9200
-ENV ELASTIC_USER=elastic
-ENV ELASTIC_PASSWORD=elastic
+ENV ELASTIC_HOST=https://elastic.datadriva.com:443
+ENV ELASTIC_USER=biga
+ENV ELASTIC_PASSWORD=tBmWP6crnc9iqkU
 
 CMD [ "poetry", "run", "python", "src/main.py" ]
