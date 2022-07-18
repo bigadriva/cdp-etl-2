@@ -378,12 +378,14 @@ components:
               "type": "field_aggregator",
               "model_applied": "products",
               "field_names": ["campo1", "campo2", "campo3"],
+              "target_field_name": "campo_resultado",
               "method": "sum"
             },
             {
               "type": "field_aggregator",
               "model_applied": "sales",
               "field_names": ["campo1", "campo2", "campo3"],
+              "target_field_name": "campo_resultado",
               "method": "sum"
             }
           ]
