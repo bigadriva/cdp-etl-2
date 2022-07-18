@@ -21,7 +21,7 @@ from routers.processor import router as processor_router
 def main():
     load_dotenv()
 
-    app = FastAPI()
+    app = FastAPI(openapi_url='/openapi.yaml')
     app.add_middleware(
         CORSMiddleware,
         allow_origins=['http://localhost', '*'],
