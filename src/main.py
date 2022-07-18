@@ -21,7 +21,12 @@ from routers.processor import router as processor_router
 def main():
     load_dotenv()
 
-    app = FastAPI(openapi_url='/openapi.yaml')
+    app = FastAPI(
+        title='CDP ETL',
+        description='API do processo de ETL do CDP',
+        docs_url='/',
+        openapi_url='/openapi.yaml'
+    )
     app.add_middleware(
         CORSMiddleware,
         allow_origins=['http://localhost', '*'],
