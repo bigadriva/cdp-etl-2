@@ -3,3 +3,8 @@ __pycache__/
 data/
 
 .env
+
+# Tests
+.pytest_cache/
+htmlcov/
+.coverage
